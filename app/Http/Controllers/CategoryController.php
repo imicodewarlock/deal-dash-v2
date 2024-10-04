@@ -61,6 +61,7 @@ class CategoryController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'name'  => 'required|string|max:255',
+            'type'  => 'required|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -80,6 +81,7 @@ class CategoryController extends BaseController
 
         $category = Category::create([
             'name'  => $request->name,
+            'type'  => $request->type,
             'image' => $imageUrl,
         ]);
 
@@ -126,6 +128,7 @@ class CategoryController extends BaseController
 
         $validator = Validator::make($request->all(), [
             'name'  => 'required|string|max:255',
+            'type'  => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -150,6 +153,7 @@ class CategoryController extends BaseController
         }
 
         $category->name     = $request->name ?? $category->name;
+        $category->type     = $request->type ?? $category->type;
         $category->image    = $imageUrl ?? $category->image;
 
         $category->update();

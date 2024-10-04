@@ -23,7 +23,7 @@ class StoreSeeder extends Seeder
         $radius = 50000; // Search within 50km radius
 
         // Get the categories (store types) from your database
-        $categories = Category::whereIn('name', [
+        $categories = Category::whereIn('type', [
             'bicycle_store', 'book_store', 'clothing_store', 'convenience_store', 
             'department_store', 'electronics_store', 'furniture_store', 'grocery_or_supermarket',
             'hardware_store', 'home_goods_store', 'jewelry_store', 'liquor_store', 
