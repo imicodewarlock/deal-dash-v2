@@ -17,6 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->group(function() {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
+
+    Route::get('/email/verify/{token}', [AuthController::class, 'verifyEmail'])->name('verify.email');
+    Route::post('/email/resend', [AuthController::class, 'resendVerificationEmail']);
+
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
     Route::post('/change-password', [AuthController::class, 'changePassword'])->middleware('auth:sanctum');
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');

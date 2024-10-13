@@ -26,4 +26,8 @@ return [
     'token_not_found' => 'Token not found.',
     'user_not_found' => 'User not found.',
     'soft_deleted' => 'Your account has been suspended, please contact the customer service.',
+    'invalid_verification_token' => 'Invalid or expired verification token.',
+    'email_verified' => 'Email successfully verified.',
+    'email_already_verified' => 'Your email is already verified.',
+    'email_verification_sent' => 'Verification email resent. Please check your inbox.',
 ];
