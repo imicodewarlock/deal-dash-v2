@@ -31,6 +31,11 @@ class Store extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $casts = [
+        'latitude' => 'double',
+        'longitude' => 'double',
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -53,10 +58,10 @@ class Store extends Model
 
     public function scopeNearbyStores(Builder $query, $latitude = 0, $longitude = 0, $distanceInMeters = 10000)
     {
-        $haversine = "(6371000 * acos(cos(radians($latitude)) 
-                        * cos(radians(latitude)) 
-                        * cos(radians(longitude) - radians($longitude)) 
-                        + sin(radians($latitude)) 
+        $haversine = "(6371000 * acos(cos(radians($latitude))
+                        * cos(radians(latitude))
+                        * cos(radians(longitude) - radians($longitude))
+                        + sin(radians($latitude))
                         * sin(radians(latitude))))";
 
         return $query->selectRaw("*, $haversine AS distance")

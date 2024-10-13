@@ -6,6 +6,7 @@ use App\Events\OfferCreated;
 use App\Models\Offer;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
+use App\Http\Resources\OfferResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +20,7 @@ class OfferController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
@@ -32,7 +33,7 @@ class OfferController extends BaseController
         if ($offers->isEmpty()) {
             return $this->sendError(__('offer.all_records_err'));
         }
-        
+
         return $this->sendSuccess(__('offer.all_records'), $offers->items(), Response::HTTP_OK,
             [
                 'current_page' => $offers->currentPage(),
@@ -56,7 +57,7 @@ class OfferController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
@@ -113,7 +114,7 @@ class OfferController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -123,7 +124,7 @@ class OfferController extends BaseController
         if (!$offer) {
             return $this->sendError(__('offer.not_found'));
         }
-        
+
         return $this->sendSuccess(__('offer.found'), $offer);
     }
 
@@ -133,7 +134,7 @@ class OfferController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
@@ -200,7 +201,7 @@ class OfferController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
@@ -222,7 +223,7 @@ class OfferController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function trashed(Request $request)
@@ -259,7 +260,7 @@ class OfferController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function restore($id)
@@ -269,7 +270,7 @@ class OfferController extends BaseController
         if (!$offer) {
             return $this->sendError(__('offer.not_found'));
         }
-        
+
         $offer->restore();
 
         return $this->sendSuccess(__('offer.restored'));
@@ -281,7 +282,7 @@ class OfferController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function forceDelete($id)
@@ -307,18 +308,18 @@ class OfferController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getSingleOffer($id)
     {
-        $offer = Offer::withoutTrashed()->find($id);
+        $offer = Offer::withoutTrashed()->with('store.category')->find($id);
 
         if (!$offer) {
             return $this->sendError(__('offer.not_found'));
         }
 
-        return $this->sendSuccess(__('offer.found'), $offer);
+        return $this->sendSuccess(__('offer.found'), new OfferResource($offer));
     }
 
     /**
@@ -327,7 +328,7 @@ class OfferController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getNearbyOffers(Request $request)
@@ -349,14 +350,14 @@ class OfferController extends BaseController
         $perPage    = $request['per_page'] ?? 10;
 
         $offers = Offer::nearbyOffers($latitude, $longitude, $radius)
-                       ->with('store')
+                       ->with('store.category')
                        ->paginate($perPage);
 
         if ($offers->isEmpty()) {
             return $this->sendError(__('offer.nearby_records_err'));
         }
-        
-        return $this->sendSuccess(__('offer.nearby_records'), $offers->items(), Response::HTTP_OK,
+
+        return $this->sendSuccess(__('offer.nearby_records'), OfferResource::collection($offers->items()), Response::HTTP_OK,
             [
                 'current_page' => $offers->currentPage(),
                 'total_count' => $offers->total(),
@@ -379,7 +380,7 @@ class OfferController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getNearbyOffersByCategory(Request $request, $id)
@@ -405,20 +406,20 @@ class OfferController extends BaseController
         $longitude  = $request['longitude'];
         $radius     = $request['radius'] ?? 10000; // Default to 10km if not provided
         $perPage    = $request['per_page'] ?? 10;
-        
+
         $offers = Offer::withoutTrashed()
                         ->whereHas('store', function ($query) use ($id) {
                             $query->where('category_id', $id);
                         })
-                        ->with('store') // Eager-load the store relation
+                        ->with('store.category') // Eager-load the store relation
                         ->nearbyOffers($latitude, $longitude, $radius) // Apply the nearby scope for distance calculation
                         ->paginate($perPage);
 
         if ($offers->isEmpty()) {
             return $this->sendError(__('offer.nearby_records_err'));
         }
-        
-        return $this->sendSuccess(__('offer.nearby_records'), $offers->items(), Response::HTTP_OK,
+
+        return $this->sendSuccess(__('offer.nearby_records'), OfferResource::collection($offers->items()), Response::HTTP_OK,
             [
                 'current_page' => $offers->currentPage(),
                 'total_count' => $offers->total(),
