@@ -18,6 +18,7 @@ Route::prefix('auth')->group(function() {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+    Route::post('/change-password', [AuthController::class, 'changePassword'])->middleware('auth:sanctum');
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
@@ -96,7 +97,7 @@ Route::prefix('v1')->group(function() {
         Route::put('notifications/{id}/unread', [NotificationController::class, 'markAsUnread']);
         Route::put('notifications/read-all', [NotificationController::class, 'markAllAsRead']);
         Route::put('notifications/unread-all', [NotificationController::class, 'markAllAsUnread']);
-        
+
         Route::get('search', [SearchController::class, 'search']);
     });
 });

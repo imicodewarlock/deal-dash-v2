@@ -17,7 +17,7 @@ class AuthController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request)
@@ -54,7 +54,7 @@ class AuthController extends BaseController
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
-        
+
         return $this->sendSuccess(__('auth.signed_up'), compact('user','token'), Response::HTTP_CREATED);
     }
 
@@ -64,7 +64,7 @@ class AuthController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request)
@@ -104,7 +104,7 @@ class AuthController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function me(Request $request)
@@ -118,7 +118,40 @@ class AuthController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'current_password'  => 'required',
+            'new_password'      => 'required|string|min:6|confirmed'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError(__('validation.failed'), Response::HTTP_UNPROCESSABLE_ENTITY, $validator->errors());
+        }
+
+        // Check if the provided current password matches the authenticated user's password
+        $user = $request->user();
+        if (!Hash::check($request->current_password, $user->password)) {
+            return $this->sendError(__('auth.password_not_match'), Response::HTTP_BAD_REQUEST);
+        }
+
+        // Update the password
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return $this->sendSuccess(__('auth.password_updated'));
+    }
+
+    /**
+     * undocumented function summary
+     *
+     * Undocumented function long description
+     *
+     * @param Request $request Description
+     *
      * @return @return \Illuminate\Http\JsonResponse
      */
     public function logout(Request $request)
