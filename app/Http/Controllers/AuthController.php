@@ -112,7 +112,7 @@ class AuthController extends BaseController
 
         $user = User::where('email', $request->email)->first();
 
-        if ($user->email_verified) {
+        if ($user->email_verified != null) {
             return $this->sendError(__('auth.email_already_verified'), Response::HTTP_BAD_REQUEST);
         }
 
