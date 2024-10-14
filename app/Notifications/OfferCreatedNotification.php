@@ -11,15 +11,15 @@ use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
 use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
-class OfferCreatedNotification extends Notification implements ShouldQueue
+class OfferCreatedNotification extends Notification /*implements ShouldQueue*/
 {
-    use Queueable;
+    // use Queueable;
 
     protected Offer $offer;
 
     /**
      * Create a new notification instance.
-     * 
+     *
      * @return void
      */
     public function __construct(Offer $offer)
