@@ -8,13 +8,13 @@ use App\Notifications\OfferCreatedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendOfferCreatedNotification implements ShouldQueue
+class SendOfferCreatedNotification /*implements ShouldQueue*/
 {
-    use InteractsWithQueue;
+    // use InteractsWithQueue;
 
     /**
      * Handle the event.
-     * 
+     *
      * @param  \App\Events\OfferCreated  $event
      * @return void
      */
