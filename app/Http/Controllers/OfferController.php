@@ -8,6 +8,7 @@ use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
 use App\Http\Resources\OfferResource;
 use App\Models\Category;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -212,6 +213,8 @@ class OfferController extends BaseController
             return $this->sendError(__('offer.not_found'));
         }
 
+        Notification::where('data->id', $offer->id)->delete();
+
         $offer->delete();
 
         return $this->sendSuccess(__('offer.disabled'));
@@ -296,6 +299,9 @@ class OfferController extends BaseController
         if ($offer->image) {
             $this->removeOldFile($offer->image);
         }
+
+        // Remove notifications related to the permanently deleted offer
+        Notification::where('data->id', $offer->id)->delete();
 
         $offer->forceDelete();
 

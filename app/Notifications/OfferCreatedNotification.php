@@ -39,9 +39,7 @@ class OfferCreatedNotification extends Notification /*implements ShouldQueue*/
 
     public function toDatabase($notifiable)
     {
-        return [
-            'offer_details' => $this->offer
-        ];
+        return $this->offer->toArray();
     }
 
     public function toFcm($notifiable): FcmMessage
@@ -51,7 +49,7 @@ class OfferCreatedNotification extends Notification /*implements ShouldQueue*/
             body: $this->offer->about,
             image: $this->offer->image
         )))
-        ->data(['offer_details' => $this->offer])
+        ->data($this->offer->toArray())
         ->custom([
             'android' => [
                 'notification' => [
