@@ -13,7 +13,7 @@ class NotificationController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getNotifications(Request $request)
@@ -26,7 +26,7 @@ class NotificationController extends BaseController
         $notifications = $user->notifications()->orderBy('created_at', 'desc')->paginate($perPage);
 
         if ($notifications->isEmpty()) {
-            return $this->sendError(__('notification.all_records_err'));
+            return $this->sendError(__('notification.all_records_err'), Response::HTTP_OK);
         }
 
         return $this->sendSuccess(__('notification.all_records'), $notifications->items(), Response::HTTP_OK,
@@ -52,7 +52,7 @@ class NotificationController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getUnreadNotifications(Request $request)
@@ -65,7 +65,7 @@ class NotificationController extends BaseController
         $unreadNotifications = $user->unreadNotifications()->orderBy('created_at', 'desc')->paginate($perPage);
 
         if ($unreadNotifications->isEmpty()) {
-            return $this->sendError(__('notification.all_records_err'));
+            return $this->sendError(__('notification.all_records_err'), Response::HTTP_OK);
         }
 
         return $this->sendSuccess(__('notification.all_records'), $unreadNotifications->items(), Response::HTTP_OK,
@@ -95,7 +95,7 @@ class NotificationController extends BaseController
             return $this->sendSuccess(__('notification.read'));
         }
 
-        return $this->sendError(__('notification.not_found'));
+        return $this->sendError(__('notification.not_found'), Response::HTTP_OK);
     }
 
     public function markAsUnread(Request $request, $notificationId)
@@ -108,14 +108,14 @@ class NotificationController extends BaseController
             return $this->sendSuccess(__('notification.unread'));
         }
 
-        return $this->sendError(__('notification.not_found'));
+        return $this->sendError(__('notification.not_found'), Response::HTTP_OK);
     }
 
     public function markAllAsRead(Request $request)
     {
         $user = $request->user();
         if ($user->notifications->isEmpty()) {
-            return $this->sendError(__('notification.all_records_err'));
+            return $this->sendError(__('notification.all_records_err'), Response::HTTP_OK);
         }
         $user->notifications->markAsRead();
         return $this->sendSuccess(__('notification.read_all'));
@@ -125,7 +125,7 @@ class NotificationController extends BaseController
     {
         $user = $request->user();
         if ($user->notifications->isEmpty()) {
-            return $this->sendError(__('notification.all_records_err'));
+            return $this->sendError(__('notification.all_records_err'), Response::HTTP_OK);
         }
         $user->notifications()->update(['read_at' => null]);
         return $this->sendSuccess(__('notification.unread_all'));
@@ -141,14 +141,14 @@ class NotificationController extends BaseController
             return $this->sendSuccess(__('notification.deleted'));
         }
 
-        return $this->sendError(__('notification.not_found'));
+        return $this->sendError(__('notification.not_found'), Response::HTTP_OK);
     }
 
     public function deleteAll(Request $request)
     {
         $user = $request->user();
         if ($user->notifications->isEmpty()) {
-            return $this->sendError(__('notification.all_records_err'));
+            return $this->sendError(__('notification.all_records_err'), Response::HTTP_OK);
         }
         $user->notifications()->delete();
         return $this->sendSuccess(__('notification.unread_all'));
