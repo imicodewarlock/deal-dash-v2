@@ -514,7 +514,7 @@ class StoreController extends BaseController
         $favoriteStores = $user->favoriteStores()->paginate($perPage);
 
         if ($favoriteStores->isEmpty()) {
-            return $this->sendError(__('store.favorite_records_err'));
+            return $this->sendError(__('store.favorite_records_err'), Response::HTTP_OK);
         }
         // return $this->sendSuccess(__('store.favorite_records'), $favoriteStores);
         return $this->sendSuccess(__('store.favorite_records'), $favoriteStores->items(), Response::HTTP_OK,
