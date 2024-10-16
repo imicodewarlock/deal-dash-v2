@@ -16,7 +16,7 @@ class UserController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
@@ -29,7 +29,7 @@ class UserController extends BaseController
         if ($users->isEmpty()) {
             return $this->sendError(__('user.all_records_err'));
         }
-        
+
         return $this->sendSuccess(__('user.all_records'), $users->items(), Response::HTTP_OK,
             [
                 'current_page' => $users->currentPage(),
@@ -53,7 +53,7 @@ class UserController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
@@ -64,7 +64,7 @@ class UserController extends BaseController
             'phone'     => 'required|unique:users|numeric',
             'password'  => 'required|string|min:6',
             'role'      => 'required|string',
-            'avatar'    => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar'    => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -99,7 +99,7 @@ class UserController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -109,7 +109,7 @@ class UserController extends BaseController
         if (!$user) {
             return $this->sendError(__('user.not_found'));
         }
-        
+
         return $this->sendSuccess(__('user.found'), $user);
     }
 
@@ -120,7 +120,7 @@ class UserController extends BaseController
      *
      * @param Request $request Description
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
@@ -137,7 +137,7 @@ class UserController extends BaseController
             'phone'     => 'numeric|unique:users,phone,' . $user->id,
             'password'  => 'string|min:6',
             'role'      => 'string',
-            'avatar'    => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar'    => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -178,7 +178,7 @@ class UserController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
@@ -200,7 +200,7 @@ class UserController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function trashed(Request $request)
@@ -237,7 +237,7 @@ class UserController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function restore($id)
@@ -247,7 +247,7 @@ class UserController extends BaseController
         if (!$user) {
             return $this->sendError(__('user.not_found'));
         }
-        
+
         $user->restore();
 
         return $this->sendSuccess(__('user.restored'));
@@ -259,7 +259,7 @@ class UserController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function forceDelete($id)

@@ -65,13 +65,13 @@ class OfferController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'name'          => 'required|string|max:255',
-            'store_id'      => 'required|numeric',
-            'image'         => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'store_id'      => 'required|integer|min:1|exists:stores,id',
+            'image'         => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'address'       => 'required|string|max:255',
-            'about'         => 'required',
-            'price'         => 'required|numeric',
-            'latitude'      => 'required|numeric',
-            'longitude'     => 'required|numeric',
+            'about'         => 'required|string|min:3|max:1000',
+            'price'         => 'required|numeric|min:0',
+            'latitude'      => 'required|numeric|between:-90,90',
+            'longitude'     => 'required|numeric|between:-180,180',
             'start_date'    => 'required|date_format:Y-m-d H:i:s',
             'end_date'      => 'required|date_format:Y-m-d H:i:s',
         ]);
@@ -148,15 +148,15 @@ class OfferController extends BaseController
 
         $validator = Validator::make($request->all(), [
             'name'          => 'required|string|max:255',
-            'store_id'      => 'required|numeric',
-            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'store_id'      => 'required|integer|min:1|exists:stores,id',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'address'       => 'required|string|max:255',
-            'about'         => 'required',
-            'price'         => 'required|numeric',
-            'latitude'      => 'required|numeric',
-            'longitude'     => 'required|numeric',
-            'start_date'    => 'required',
-            'end_date'      => 'required',
+            'about'         => 'required|string|min:3|max:1000',
+            'price'         => 'required|numeric|min:0',
+            'latitude'      => 'required|numeric|between:-90,90',
+            'longitude'     => 'required|numeric|between:-180,180',
+            'start_date'    => 'required|date_format:Y-m-d H:i:s',
+            'end_date'      => 'required|date_format:Y-m-d H:i:s',
         ]);
 
         if ($validator->fails()) {
@@ -341,8 +341,8 @@ class OfferController extends BaseController
     {
         // Validate the request input (latitude and longitude)
         $validator = Validator::make($request->all(), [
-            'latitude'  => 'required|numeric',
-            'longitude' => 'required|numeric',
+            'latitude'  => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'radius'    => 'nullable|numeric', // (Optional) radius in meters
         ]);
 
@@ -393,8 +393,8 @@ class OfferController extends BaseController
     {
         // Validate the request input (latitude and longitude)
         $validator = Validator::make($request->all(), [
-            'latitude'  => 'required|numeric',
-            'longitude' => 'required|numeric',
+            'latitude'  => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'radius'    => 'nullable|numeric', // (Optional) radius in meters
         ]);
 

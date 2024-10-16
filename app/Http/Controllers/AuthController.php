@@ -32,7 +32,7 @@ class AuthController extends BaseController
             'email'     => 'required|string|max:255|email|unique:users',
             'phone'     => 'required|numeric|unique:users',
             'password'  => 'required|string|min:6|confirmed',
-            'avatar'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {

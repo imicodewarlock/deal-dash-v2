@@ -17,7 +17,7 @@ class CategoryController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
@@ -30,7 +30,7 @@ class CategoryController extends BaseController
         if ($categories->isEmpty()) {
             return $this->sendError(__('category.all_records_err'));
         }
-        
+
         return $this->sendSuccess(__('category.all_records'), $categories->items(), Response::HTTP_OK,
             [
                 'current_page' => $categories->currentPage(),
@@ -54,7 +54,7 @@ class CategoryController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
@@ -62,7 +62,7 @@ class CategoryController extends BaseController
         $validator = Validator::make($request->all(), [
             'name'  => 'required|string|max:255',
             'type'  => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -94,7 +94,7 @@ class CategoryController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -104,7 +104,7 @@ class CategoryController extends BaseController
         if (!$category) {
             return $this->sendError(__('category.not_found'));
         }
-        
+
         return $this->sendSuccess(__('category.found'), $category);
     }
 
@@ -115,7 +115,7 @@ class CategoryController extends BaseController
      *
      * @param Request $request Description
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
@@ -129,7 +129,7 @@ class CategoryController extends BaseController
         $validator = Validator::make($request->all(), [
             'name'  => 'required|string|max:255',
             'type'  => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -167,7 +167,7 @@ class CategoryController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
@@ -189,7 +189,7 @@ class CategoryController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function trashed(Request $request)
@@ -226,7 +226,7 @@ class CategoryController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function restore($id)
@@ -236,7 +236,7 @@ class CategoryController extends BaseController
         if (!$category) {
             return $this->sendError(__('category.not_found'));
         }
-        
+
         $category->restore();
 
         return $this->sendSuccess(__('category.restored'));
@@ -248,7 +248,7 @@ class CategoryController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function forceDelete($id)
@@ -274,7 +274,7 @@ class CategoryController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getAvailableCategories(Request $request)
@@ -309,7 +309,7 @@ class CategoryController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getSingleCategory($id)
@@ -319,7 +319,7 @@ class CategoryController extends BaseController
         if (!$category) {
             return $this->sendError(__('category.not_found'));
         }
-        
+
         return $this->sendSuccess(__('category.found'), $category);
     }
 }

@@ -71,10 +71,14 @@ class Store extends Model
 
     public function getDistanceAttribute($distance)
     {
-        // Format distance as meters or kilometers
+        // Format distance as meters, kilometers, or miles
         if ($distance < 1000) {
-            return round($distance) . 'm'; // Meters
+            return round($distance) . __('misc.meter'); // Meters
+        } elseif ($distance < 1609) {
+            return round($distance / 1000, 1) . __('misc.kilometer'); // Kilometers
+        } else {
+            // Convert distance to miles (1 mile = 1609 meters)
+            return round($distance / 1609, 1) . __('misc.mile'); // Miles
         }
-        return round($distance / 1000, 1) . 'km'; // Kilometers
     }
 }

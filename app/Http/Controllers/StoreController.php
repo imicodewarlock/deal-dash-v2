@@ -19,7 +19,7 @@ class StoreController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
@@ -32,7 +32,7 @@ class StoreController extends BaseController
         if ($stores->isEmpty()) {
             return $this->sendError(__('store.all_records_err'));
         }
-        
+
         return $this->sendSuccess(__('store.all_records'), $stores->items(), Response::HTTP_OK,
             [
                 'current_page' => $stores->currentPage(),
@@ -56,21 +56,21 @@ class StoreController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name'          => 'required|string|max:255',
-            'category_id'   => 'required|numeric',
-            'image'         => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'category_id'   => 'required|integer|min:1|exists:categories,id',
+            'image'         => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'address'       => 'required|string|max:255',
-            'about'         => 'required',
+            'about'         => 'required|string|min:3|max:1000',
             'phone'         => 'required|numeric',
-            'latitude'      => 'required|numeric',
-            'longitude'     => 'required|numeric',
-            'place_id'      => 'nullable',
+            'latitude'      => 'required|numeric|between:-90,90',
+            'longitude'     => 'required|numeric|between:-180,180',
+            'place_id'      => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -108,7 +108,7 @@ class StoreController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -118,7 +118,7 @@ class StoreController extends BaseController
         if (!$store) {
             return $this->sendError(__('store.not_found'));
         }
-        
+
         return $this->sendSuccess(__('store.found'), $store);
     }
 
@@ -129,7 +129,7 @@ class StoreController extends BaseController
      *
      * @param Request $request Description
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
@@ -142,13 +142,13 @@ class StoreController extends BaseController
 
         $validator = Validator::make($request->all(), [
             'name'          => 'nullable|string|max:255',
-            'category_id'   => 'nullable|numeric',
-            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'category_id'   => 'nullable|integer|min:1|exists:categories,id',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'address'       => 'nullable|string|max:255',
-            'about'         => 'nullable',
+            'about'         => 'nullable|string|min:3|max:1000',
             'phone'         => 'nullable|numeric',
-            'latitude'      => 'nullable|numeric',
-            'longitude'     => 'nullable|numeric',
+            'latitude'      => 'nullable|numeric|between:-90,90',
+            'longitude'     => 'nullable|numeric|between:-180,180',
             'place_id'      => 'nullable',
         ]);
 
@@ -193,7 +193,7 @@ class StoreController extends BaseController
      * Undocumented function long description
      *
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
@@ -215,7 +215,7 @@ class StoreController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function trashed(Request $request)
@@ -252,7 +252,7 @@ class StoreController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function restore($id)
@@ -262,7 +262,7 @@ class StoreController extends BaseController
         if (!$store) {
             return $this->sendError(__('store.not_found'));
         }
-        
+
         $store->restore();
 
         return $this->sendSuccess(__('store.restored'));
@@ -274,7 +274,7 @@ class StoreController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function forceDelete($id)
@@ -301,7 +301,7 @@ class StoreController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getAvailableStores(Request $request)
@@ -316,7 +316,7 @@ class StoreController extends BaseController
         if ($stores->isEmpty()) {
             return $this->sendError(__('store.all_records_err'));
         }
-        
+
         return $this->sendSuccess(__('store.all_records'), $stores->items(), Response::HTTP_OK,
             [
                 'current_page' => $stores->currentPage(),
@@ -340,7 +340,7 @@ class StoreController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getSingleStore($id)
@@ -353,7 +353,7 @@ class StoreController extends BaseController
         if (!$store) {
             return $this->sendError(__('store.not_found'));
         }
-        
+
         return $this->sendSuccess(__('store.found'), $store);
     }
 
@@ -363,15 +363,15 @@ class StoreController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getNearbyStores(Request $request)
     {
         // Validate the request input (latitude and longitude)
         $validator = Validator::make($request->all(), [
-            'latitude'  => 'required|numeric',
-            'longitude' => 'required|numeric',
+            'latitude'  => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'radius'    => 'nullable|numeric', // Optional radius in kilometers
         ]);
 
@@ -391,7 +391,7 @@ class StoreController extends BaseController
         if ($stores->isEmpty()) {
             return $this->sendError(__('store.nearby_records_err'));
         }
-        
+
         return $this->sendSuccess(__('store.nearby_records'), $stores->items(), Response::HTTP_OK,
             [
                 'current_page' => $stores->currentPage(),
@@ -416,15 +416,15 @@ class StoreController extends BaseController
      *
      * @param Request $request Description
      * @param \App\Models\Category $category Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getNearbyStoresByCategory(Request $request, Category $category)
     {
         // Validate the request input (latitude and longitude)
         $validator = Validator::make($request->all(), [
-            'latitude'  => 'required|numeric',
-            'longitude' => 'required|numeric',
+            'latitude'  => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'radius'    => 'nullable|numeric', // Optional radius in kilometers
         ]);
 
@@ -448,7 +448,7 @@ class StoreController extends BaseController
         if ($stores->isEmpty()) {
             return $this->sendError(__('store.nearby_records_err'));
         }
-        
+
         return $this->sendSuccess(__('store.nearby_records'), $stores->items(), Response::HTTP_OK,
             [
                 'current_page' => $stores->currentPage(),
@@ -473,7 +473,7 @@ class StoreController extends BaseController
      *
      * @param Request $request Description
      * @param mixed $id Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function toggleFavorite(Request $request, $id)
@@ -503,7 +503,7 @@ class StoreController extends BaseController
      * Undocumented function long description
      *
      * @param Request $request Description
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getStoresFavoriteByUsers(Request $request)
