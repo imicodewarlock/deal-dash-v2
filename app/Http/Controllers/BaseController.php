@@ -129,7 +129,7 @@ class BaseController extends Controller
         $client = new GoogleClient();
         $client->setAuthConfig($credentials);
         $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-        $client->refreshTokenWithAssertion();
+        $client->fetchAccessTokenWithAssertion();
         $token = $client->getAccessToken();
 
         $access_token = $token['access_token'];
