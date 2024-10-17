@@ -62,8 +62,6 @@ class OfferCreatedNotification extends Notification /*implements ShouldQueue*/
         return FcmMessage::create()
                          ->name('name')
                          ->token('dOawjzbuSgGEumND4gRoJH:APA91bHWAPKxe60yc1Z9i9Ioz13jwRlYjoUS8CYOfxCvOY7TZ8h9Xu0Idv1zlxvjCkQOUjTfXHySLs_RSoZpn3dHsUU9QhQmmLP59FxhiNe3gQcpsz9VaRFCPapErwApHnMEDUSuZt8C')
-                         ->topic('topic')
-                         ->condition('condition')
                          ->data([
                             "id" => $this->offer->id,
                             "name" => $this->offer->name,
