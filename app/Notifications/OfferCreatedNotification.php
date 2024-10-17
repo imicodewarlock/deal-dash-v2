@@ -43,7 +43,7 @@ class OfferCreatedNotification extends Notification /*implements ShouldQueue*/
         return [
             "id" => $this->offer->id,
             "name" => $this->offer->name,
-            "store_id" => $this->offer->store_id,
+            "store_id" => (int) $this->offer->store_id,
             "image" => $this->offer->image,
             "address" => $this->offer->address,
             "about" => $this->offer->about,
