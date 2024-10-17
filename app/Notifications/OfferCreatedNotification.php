@@ -37,9 +37,24 @@ class OfferCreatedNotification extends Notification /*implements ShouldQueue*/
         return ['database', FcmChannel::class];
     }
 
-    public function toDatabase($notifiable)
+    public function toArray($notifiable)
     {
-        return $this->offer->toArray();
+        // return $this->offer->toArray();
+        return [
+            "id" => $this->offer->id,
+            "name" => $this->offer->name,
+            "store_id" => $this->offer->store_id,
+            "image" => $this->offer->image,
+            "address" => $this->offer->address,
+            "about" => $this->offer->about,
+            "price" => $this->offer->price,
+            "latitude" => $this->offer->latitude,
+            "longitude" => $this->offer->longitude,
+            "start_date" => $this->offer->start_date,
+            "end_date" => $this->offer->end_date,
+            "updated_at" => $this->offer->updated_at,
+            "created_at" => $this->offer->created_at,
+        ];
     }
 
     public function toFcm($notifiable): FcmMessage
@@ -49,7 +64,21 @@ class OfferCreatedNotification extends Notification /*implements ShouldQueue*/
             body: $this->offer->about,
             image: $this->offer->image
         )))
-        ->data($this->offer->toArray())
+        ->data([
+            "id" => $this->offer->id,
+            "name" => $this->offer->name,
+            "store_id" => $this->offer->store_id,
+            "image" => $this->offer->image,
+            "address" => $this->offer->address,
+            "about" => $this->offer->about,
+            "price" => $this->offer->price,
+            "latitude" => $this->offer->latitude,
+            "longitude" => $this->offer->longitude,
+            "start_date" => $this->offer->start_date,
+            "end_date" => $this->offer->end_date,
+            "updated_at" => $this->offer->updated_at,
+            "created_at" => $this->offer->created_at,
+        ])
         ->custom([
             'android' => [
                 'notification' => [
