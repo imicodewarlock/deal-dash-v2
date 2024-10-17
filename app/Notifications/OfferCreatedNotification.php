@@ -32,9 +32,9 @@ class OfferCreatedNotification extends Notification /*implements ShouldQueue*/
      *
      * @return array<int, string>
      */
-    public function via($notifiable): array
+    public function via($notifiable)
     {
-        return ['database', FcmChannel::class];
+        return [FcmChannel::class, 'database'];
     }
 
     public function toArray($notifiable)
@@ -57,67 +57,48 @@ class OfferCreatedNotification extends Notification /*implements ShouldQueue*/
         ];
     }
 
-    public function toFcm($notifiable): FcmMessage
+    public function toFcm($notifiable)
     {
-        return FcmMessage::create()
-                         ->name('name')
-                         ->token('dOawjzbuSgGEumND4gRoJH:APA91bHWAPKxe60yc1Z9i9Ioz13jwRlYjoUS8CYOfxCvOY7TZ8h9Xu0Idv1zlxvjCkQOUjTfXHySLs_RSoZpn3dHsUU9QhQmmLP59FxhiNe3gQcpsz9VaRFCPapErwApHnMEDUSuZt8C')
-                         ->data([
-                            "id" => $this->offer->id,
-                            "name" => $this->offer->name,
-                            "store_id" => (int) $this->offer->store_id,
-                            "image" => $this->offer->image,
-                            "address" => $this->offer->address,
-                            "about" => $this->offer->about,
-                            "price" => $this->offer->price,
-                            "latitude" => $this->offer->latitude,
-                            "longitude" => $this->offer->longitude,
-                            "start_date" => $this->offer->start_date,
-                            "end_date" => $this->offer->end_date,
-                            "updated_at" => $this->offer->updated_at,
-                            "created_at" => $this->offer->created_at,
-                         ])
-                         ->custom(['notification' => []]);
-        // return (new FcmMessage(notification: new FcmNotification(
-        //     title: $this->offer->name,
-        //     body: $this->offer->about,
-        //     image: $this->offer->image
-        // )))
-        // ->data([
-        //     "id" => $this->offer->id,
-        //     "name" => $this->offer->name,
-        //     "store_id" => (int) $this->offer->store_id,
-        //     "image" => $this->offer->image,
-        //     "address" => $this->offer->address,
-        //     "about" => $this->offer->about,
-        //     "price" => $this->offer->price,
-        //     "latitude" => $this->offer->latitude,
-        //     "longitude" => $this->offer->longitude,
-        //     "start_date" => $this->offer->start_date,
-        //     "end_date" => $this->offer->end_date,
-        //     "updated_at" => $this->offer->updated_at,
-        //     "created_at" => $this->offer->created_at,
-        // ])
-        // ->custom([
-        //     'android' => [
-        //         'notification' => [
-        //             'color' => '#0A0A0A',
-        //             'sound' => 'default',
-        //         ],
-        //         'fcm_options' => [
-        //             'analytics_label' => 'analytics',
-        //         ],
-        //     ],
-        //     'apns' => [
-        //         'payload' => [
-        //             'aps' => [
-        //                 'sound' => 'default'
-        //             ],
-        //         ],
-        //         'fcm_options' => [
-        //             'analytics_label' => 'analytics',
-        //         ],
-        //     ],
-        // ]);
+        return (new FcmMessage(notification: new FcmNotification(
+            title: $this->offer->name,
+            body: $this->offer->about,
+            image: $this->offer->image
+        )))
+        ->data([
+            "id" => $this->offer->id,
+            "name" => $this->offer->name,
+            "store_id" => (int) $this->offer->store_id,
+            "image" => $this->offer->image,
+            "address" => $this->offer->address,
+            "about" => $this->offer->about,
+            "price" => $this->offer->price,
+            "latitude" => $this->offer->latitude,
+            "longitude" => $this->offer->longitude,
+            "start_date" => $this->offer->start_date,
+            "end_date" => $this->offer->end_date,
+            "updated_at" => $this->offer->updated_at,
+            "created_at" => $this->offer->created_at,
+        ])
+        ->custom([
+            'android' => [
+                'notification' => [
+                    'color' => '#0A0A0A',
+                    'sound' => 'default',
+                ],
+                'fcm_options' => [
+                    'analytics_label' => 'analytics',
+                ],
+            ],
+            'apns' => [
+                'payload' => [
+                    'aps' => [
+                        'sound' => 'default'
+                    ],
+                ],
+                'fcm_options' => [
+                    'analytics_label' => 'analytics',
+                ],
+            ],
+        ]);
     }
 }

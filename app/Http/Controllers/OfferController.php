@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateOfferRequest;
 use App\Http\Resources\OfferResource;
 use App\Models\Category;
 use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -103,8 +104,38 @@ class OfferController extends BaseController
             'end_date'      => $request->end_date,
         ]);
 
-        event(new OfferCreated($offer));
-        // OfferCreated::dispatch($offer);
+        $users = User::withoutTrashed()->whereNotNull('fcm_token')->get();
+
+        if (!$users->isEmpty()) {
+            foreach ($users as $user) {
+                $this->sendFcmNotification(
+                    $user->fcm_token,
+                    [
+                        "title" => $offer->name,
+                        "body" => $offer->about,
+                        "image" => $offer->image
+                    ],
+                    [
+                        "id" => $offer->id,
+                        "name" => $offer->name,
+                        "store_id" => (int) $offer->store_id,
+                        "image" => $offer->image,
+                        "address" => $offer->address,
+                        "about" => $offer->about,
+                        "price" => $offer->price,
+                        "latitude" => $offer->latitude,
+                        "longitude" => $offer->longitude,
+                        "start_date" => $offer->start_date,
+                        "end_date" => $offer->end_date,
+                        "updated_at" => $offer->updated_at,
+                        "created_at" => $offer->created_at,
+                    ],
+                );
+            }
+        }
+
+        // event(new OfferCreated($offer));
+        OfferCreated::dispatch($offer);
 
         return $this->sendSuccess(__('offer.added'), $offer, Response::HTTP_CREATED);
     }
